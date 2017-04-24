@@ -1,0 +1,20 @@
+stacks:
+- fulfilment-zuora-exporter
+regions:
+- eu-west-1
+deployments:
+  zuora-exporter:
+    type: autoscaling
+    parameters:
+      bucket: fulfilment-dist
+  zuora-exporter-ami-update:
+    type: ami-cloudformation-parameter
+    parameters:
+      amiTags:
+        Recipe: ubuntu-wily-java8
+        AmigoStage: PROD
+      cloudFormationStackName: zuora-exporter
+      prependStackToCloudFormationStackName: false
+      appendStageToCloudFormationStackName: true
+      cloudFormationStackByTags: false
+    dependencies: [zuora-exporter]
