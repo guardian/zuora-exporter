@@ -39,7 +39,9 @@ libraryDependencies ++= Seq(
   ws,
   "com.gu" %% "play-googleauth" % "0.6.0",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
+  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test,
+  "com.gu" %% "configuration-magic-play2-4" % "1.3.0",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
 )
 
 routesGenerator := InjectedRoutesGenerator
