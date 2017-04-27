@@ -1,0 +1,12 @@
+@(message: TraversableOnce[String])
+
+<html>
+    <head><title>CSV</title></head>
+    <body>
+        <h1>CSV</h1>
+            <p>The csv was: </p>
+        @message.map { line =>
+            <p>@line</p>
+        }
+    </body>
+</html>

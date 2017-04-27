@@ -5,6 +5,8 @@
 
 GET        /                                                              controllers.Application.index
 GET        /callZuora                                                     controllers.Application.callZuora
+GET        /csv             controllers.Application.csv
+GET        /filter             controllers.Application.filter
 
 # Healthcheck
 GET        /healthcheck                                                   controllers.Healthcheck.healthcheck
