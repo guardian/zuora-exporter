@@ -68,25 +68,6 @@ Charge_day // day we're running for
      and RatePlanCharge.Name = 'Holiday Credit')
     */
 
-  val Rate_Plan_Charge__Charged_Through_Date = 0
-  val Rate_Plan_Charge__DMRC = 1
-  val Rate_Plan_Charge__DTCV = 2
-  val Rate_Plan_Charge__Effective_End_Date = 3
-  val Rate_Plan_Charge__Effective_Start_Date = 4
-  val Rate_Plan_Charge__Holiday_End = 5
-  val Rate_Plan_Charge__ID = 6
-  val Rate_Plan_Charge__MRR = 7
-  val Rate_Plan_Charge__Name = 8
-  val Rate_Plan_Charge__TCV = 9
-  val Rate_Plan_Charge__Version = 10
-  val Account__ID = 11
-  val Bill_To__ID = 12
-  val Default_Payment_Method__ID = 13
-  val Product__Name = 14
-  val Rate_Plan__Name = 15
-  val Sold_To__ID = 16
-  val Subscription__ID = 17
-
   val Subscription_Name = 0
   val SoldToContact_Address1 = 1
   val SoldToContact_Address2 = 2
