@@ -39,7 +39,26 @@ Charge_day // day we're running for
  "","","","","","","","Papers please","","","27/04/2017","28/04/2017","","","","Friday"
  
     */
-   
+   /*
+   SELECT
+      Sold To: Address 1,
+      Sold To: Address 2,
+      Sold To: City,
+      Sold To: Country,
+      Sold To: First Name,
+      Sold To: Last Name,
+      Sold To: Postal Code,
+      Sold To: State/Province,
+      Subscription: Name
+   FROM rateplancharge
+   WHERE
+      (((((((((Subscription.Status != 'Draft' and Subscription.Status != 'Pending Activation') and Subscription.Status != 'Expired') and Subscription.Status != 'Suspended') and Subscription.Status != 'Pending Acceptance')
+       and Account.Balance >= 0)
+        and ProductRatePlanCharge.ProductType__c = 'Print Saturday')
+         and Product.Name = 'Newspaper Delivery')
+          and RatePlanCharge.EffectiveStartDate <= '27/04/2017')
+           and RatePlanCharge.EffectiveEndDate >= '27/04/2017')
+    */
    
   val Rate_Plan_Charge__Charged_Through_Date = 0
   val Rate_Plan_Charge__DMRC = 1
