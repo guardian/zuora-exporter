@@ -41,15 +41,15 @@ Charge_day // day we're running for
     */
    /*
    SELECT
-      Sold To: Address 1,
-      Sold To: Address 2,
-      Sold To: City,
-      Sold To: Country,
-      Sold To: First Name,
-      Sold To: Last Name,
-      Sold To: Postal Code,
-      Sold To: State/Province,
-      Subscription: Name
+      Subscription.Name
+      SoldToContact.Address1
+      SoldToContact.Address2
+      SoldToContact.City
+      SoldToContact.Country
+      SoldToContact.FirstName
+      SoldToContact.LastName
+      SoldToContact.PostalCode
+      SoldToContact.State
    FROM rateplancharge
    WHERE
       (((((((((Subscription.Status != 'Draft' and Subscription.Status != 'Pending Activation') and Subscription.Status != 'Expired') and Subscription.Status != 'Suspended') and Subscription.Status != 'Pending Acceptance')
