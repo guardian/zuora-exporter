@@ -14,12 +14,8 @@ object Filter {
   case class FulfilRecord(nameAddressTemp: String)
 
   def getToFulfil(charges: TraversableOnce[ChargeFormat], run: Run): TraversableOnce[FulfilRecord] = {
-    val chargesToFulfil = charges.filter { charge =>
-      val correctDay = charge.name == run.chargeName
-      val correctProduct = charge.productName == "Newspaper Delivery"
-      correctDay && correctProduct
-    }
-    chargesToFulfil.map { charge =>
+
+    List(1).map { charge =>
       FulfilRecord(charge.toString) // lol
     }
   }

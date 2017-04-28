@@ -58,34 +58,46 @@ Charge_day // day we're running for
          and Product.Name = 'Newspaper Delivery')
           and RatePlanCharge.EffectiveStartDate <= '27/04/2017')
            and RatePlanCharge.EffectiveEndDate >= '27/04/2017')
+
+  HOLIDAY SUSPENSION
+  SELECT Subscription.Name
+  FROM rateplancharge
+  WHERE (((RatePlanCharge.EffectiveStartDate <= '28/04/2017'
+   and RatePlanCharge.HolidayEnd__c >= '28/04/2017')
+    and ProductRatePlanCharge.ProductType__c = 'Adjustment')
+     and RatePlanCharge.Name = 'Holiday Credit')
     */
-   
-  val Rate_Plan_Charge__Charged_Through_Date = 0
-  val Rate_Plan_Charge__DMRC = 1
-  val Rate_Plan_Charge__DTCV = 2
-  val Rate_Plan_Charge__Effective_End_Date = 3
-  val Rate_Plan_Charge__Effective_Start_Date = 4
-  val Rate_Plan_Charge__Holiday_End = 5
-  val Rate_Plan_Charge__ID = 6
-  val Rate_Plan_Charge__MRR = 7
-  val Rate_Plan_Charge__Name = 8
-  val Rate_Plan_Charge__TCV = 9
-  val Rate_Plan_Charge__Version = 10
-  val Account__ID = 11
-  val Bill_To__ID = 12
-  val Default_Payment_Method__ID = 13
-  val Product__Name = 14
-  val Rate_Plan__Name = 15
-  val Sold_To__ID = 16
-  val Subscription__ID = 17
+
+  val Subscription_Name = 0
+  val SoldToContact_Address1 = 1
+  val SoldToContact_Address2 = 2
+  val SoldToContact_City = 3
+  val SoldToContact_Country = 4
+  val SoldToContact_FirstName = 5
+  val SoldToContact_LastName = 6
+  val SoldToContact_PostalCode = 7
+  val SoldToContact_State = 8
 
   case class SoldToId(value: String)
-  case class ChargeFormat(name: String, productName: String, soldTo: SoldToId)
+  case class ChargeFormat(
+    subscriptionName: String,
+    address1: String,
+    address2: String,
+    city: String,
+    country: String,
+    firstName: String,
+    lastName: String,
+    postCode: String,
+    state: String
+  )
+  case class SuspensionFormat(
+    subscriptionName: String
+  )
 
-  implicit val soldToDecoder: CellDecoder[SoldToId] =
-    CellDecoder.from(id => Result.success(SoldToId(id)))
-
-  implicit val chargeDecoder: RowDecoder[ChargeFormat] =
-    RowDecoder.decoder(Rate_Plan_Charge__Name, Product__Name, Sold_To__ID)(ChargeFormat.apply)
+  //  implicit val soldToDecoder: CellDecoder[SoldToId] =
+  //    CellDecoder.from(id => Result.success(SoldToId(id)))
+  //
+  //  implicit val chargeDecoder: RowDecoder[ChargeFormat] =
+  //    RowDecoder.decoder(Rate_Plan_Charge__Name, Product__Name, Sold_To__ID)(ChargeFormat.apply)
 
 }

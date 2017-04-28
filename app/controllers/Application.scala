@@ -9,6 +9,7 @@ import play.api.mvc.{ Action, Controller }
 import zuora.ZuoraAQuA
 import kantan.csv._
 import kantan.csv.ops._
+import kantan.csv.generic._
 import csv.Charge._
 import filter.Filter
 
@@ -84,9 +85,18 @@ class Application(zuoraClient: ZuoraAQuA) extends Controller {
     Ok(views.html.index())
   }
 
-  def csv = Action {
-    val inputFile = scala.io.Source.fromFile("/Users/jduffell/Downloads/RatePlanCharge.csv", "UTF-8").reader()
+  def csvCharges = Action {
+    val inputFile = scala.io.Source.fromFile("/Users/jduffell/Downloads/FulfilmentChargeExport.csv", "UTF-8").reader()
     val csvReader = inputFile.asCsvReader[ChargeFormat](rfc.withHeader)
+    val interesting = csvReader.take(20).collect {
+      case Success(format) => format.toString
+    }
+    Ok(views.html.csv(interesting))
+  }
+
+  def csvSuspensions = Action {
+    val inputFile = scala.io.Source.fromFile("/Users/jduffell/Downloads/FulfilmentChargeSuspensions.csv", "UTF-8").reader()
+    val csvReader = inputFile.asCsvReader[SuspensionFormat](rfc.withHeader)
     val interesting = csvReader.take(20).collect {
       case Success(format) => format.toString
     }

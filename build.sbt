@@ -42,7 +42,7 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test,
   "com.gu" %% "configuration-magic-play2-4" % "1.3.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-  "com.nrinaudo" %% "kantan.csv" % "0.1.18"
+  "com.nrinaudo" %% "kantan.csv-generic" % "0.1.18"
 )
 
 routesGenerator := InjectedRoutesGenerator

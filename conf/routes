@@ -4,8 +4,9 @@
 
 
 GET        /                                                              controllers.Application.index
-GET        /csv                                                           controllers.Application.csv
-GET        /filter                                                        controllers.Application.filter
+GET        /csvCharges             controllers.Application.csvCharges
+GET        /csvSuspensions             controllers.Application.csvSuspensions
+GET        /filter             controllers.Application.filter
 
 GET        /zuoraQuery                                                    controllers.Application.zuoraQuery
 GET        /zuoraCallback                                                 controllers.Application.zuoraCallback
