@@ -10,7 +10,7 @@ import com.gu.googleauth.GoogleAuthConfig
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.ws.{ WSAuthScheme, WSRequest }
-import zuora.ZuoraCreds
+import zuora.{ ZuoraAQuA, ZuoraCreds }
 
 class AppComponents(context: Context)
     extends BuiltInComponentsFromContext(context)
@@ -32,11 +32,16 @@ class AppComponents(context: Context)
     ZuoraCreds(username, mandatoryConfig("secret.zuora.password"))
   }
 
+  val zuoraAQuAApi = mandatoryConfig("zuora.aquaApi.baseUrl")
+
   val zuoraWs: String => WSRequest = { url =>
-    wsClient.url(url).withAuth(zuoraCreds.username, zuoraCreds.password, WSAuthScheme.BASIC)
+    wsClient.url(zuoraAQuAApi + url).withAuth(zuoraCreds.username, zuoraCreds.password, WSAuthScheme.BASIC)
   }
 
-  val applicationController = new Application(zuoraWs)
+  val callbackUrl = mandatoryConfig("zuora.aquaApi.callbackUrl")
+  lazy val zuoraApi = new ZuoraAQuA(zuoraWs, callbackUrl)(actorSystem)
+
+  val applicationController = new Application(zuoraApi)
   val healthcheckController = new Healthcheck
   val loginController = new Login(wsClient, googleAuthConfig)
   val assets = new Assets(httpErrorHandler)

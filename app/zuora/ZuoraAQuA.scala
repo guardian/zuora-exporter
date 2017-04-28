@@ -1,27 +1,89 @@
 package zuora
 
+import java.io.FileOutputStream
+
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.Sink
+import akka.util.ByteString
 import play.api.http.Writeable
 import play.api.libs.json.{ JsPath, JsValue, Json, Writes }
 import play.api.libs.ws.{ WSClient, WSRequest }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-object ZuoraAQuA {
+case class Batch(
+  batchId: String,
+  name: String,
+  status: String,
+  fileId: Option[String],
+  recordCount: Int,
+  query: String,
+  message: String
+)
 
-  case class QueryObject(query: String)
+object Batch {
+  implicit val batchFmt = Json.format[Batch]
+}
 
-  implicit def jsWriteable[A](implicit wa: Writes[A], wjs: Writeable[JsValue]): Writeable[A] = wjs.map(a => Json.toJson(a))
+class ZuoraAQuA(zuoraWs: (String => WSRequest), callbackUrl: String)(implicit system: ActorSystem) {
 
-  implicit val queryWriter: Writes[QueryObject] = new Writes[QueryObject] {
-    override def writes(queryObject: QueryObject): JsValue = {
-      Json.obj("asdf" -> queryObject.query)
+  def batchQuery(queries: List[String]) = {
+    val ws = zuoraWs("/batch-query/")
+    ws.post(
+      Json.obj(
+        "format" -> "csv",
+        "version" -> "1.0",
+        "name" -> "Batch_Query_for_DataLake",
+        "encrypted" -> "none",
+        "useQueryLabels" -> "true",
+        "notifyUrl" -> s"$callbackUrl?jobId=$${JOBID}&status=$${STATUS}",
+        "dateTimeUtc" -> "true",
+        "queries" -> queries.map { q =>
+          Json.obj(
+            "name" -> "Query1",
+            "query" -> q,
+            "type" -> "zoqlexport"
+          )
+        }
+      )
+    ).map { wsResponse =>
+        wsResponse.status + wsResponse.body
+      }
+  }
+
+  def getJobResults(jobId: String) = {
+    val ws = zuoraWs(s"/batch-query/jobs/$jobId")
+    ws.get().map { wsResponse =>
+      wsResponse.status + wsResponse.body
+      (wsResponse.json \ "batches").as[List[Batch]]
     }
   }
 
-  def batchQuery(query: String) = { zuoraWs: (String => WSRequest) =>
-    val ws = zuoraWs("https://www.zuora.com/apps/api/batch-query/")
-    ws.post(QueryObject(query)).map { wsResponse =>
-      wsResponse.status + wsResponse.body
+  def getResultsFile(fileId: String) = {
+
+    implicit val materializer = ActorMaterializer()
+
+    val ws = zuoraWs(s"/file/$fileId")
+    val file = s"$fileId.csv"
+    ws.withMethod("GET").stream().flatMap {
+      res =>
+        val outputStream = new FileOutputStream(file)
+
+        // The sink that writes to the output stream
+        val sink = Sink.foreach[ByteString] { bytes =>
+          outputStream.write(bytes.toArray)
+        }
+
+        // materialize and run the stream
+        res.body.runWith(sink).andThen {
+          case result =>
+            // Close the output stream whether there was an error or not
+            outputStream.close()
+            // Get the result or rethrow the error
+            result.get
+        }.map(_ => file)
     }
+
   }
 
 }

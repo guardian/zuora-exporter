@@ -4,9 +4,11 @@
 
 
 GET        /                                                              controllers.Application.index
-GET        /callZuora                                                     controllers.Application.callZuora
-GET        /csv             controllers.Application.csv
-GET        /filter             controllers.Application.filter
+GET        /csv                                                           controllers.Application.csv
+GET        /filter                                                        controllers.Application.filter
+
+GET        /zuoraQuery                                                    controllers.Application.zuoraQuery
+GET        /zuoraCallback                                                 controllers.Application.zuoraCallback
 
 # Healthcheck
 GET        /healthcheck                                                   controllers.Healthcheck.healthcheck
